@@ -14,5 +14,5 @@ const kPrimaryGradientColor = LinearGradient(
 );
 const kAnimationDuration = Duration(milliseconds: 200);
 const kAnimationMiliseconds = 500;
-const kUrl = "http://127.0.0.1:8000/api";
+const kUrl = "http://10.0.2.2:8000/api";
 final Dio dioConst = Dio();

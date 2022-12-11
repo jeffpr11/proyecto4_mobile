@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto4_mobile/size_data.dart';
 import 'package:proyecto4_mobile/constants.dart';
-
 import 'package:proyecto4_mobile/screens/event/event.dart';
 import 'package:proyecto4_mobile/screens/group/group.dart';
 import 'package:proyecto4_mobile/screens/record/record.dart';
@@ -12,18 +10,18 @@ class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
   @override
-  _HomeState createState() => _HomeState();
+  HomeState createState() => HomeState();
 }
 
-class _HomeState extends State<Home> {
+class HomeState extends State<Home> {
   int current = 0;
 
   final List<Widget> _screens = [
-    Event(),
-    Group(),
-    Resource(),
-    Record(),
-    Profile(),
+    const Event(),
+    const Group(),
+    const Resource(),
+    const Record(),
+    const Profile(),
   ];
 
   @override
@@ -61,9 +59,13 @@ class _HomeState extends State<Home> {
         unselectedFontSize: 12,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(icon: Icon(Icons.groups_outlined), label: 'Grupo'),
-          BottomNavigationBarItem(icon: Icon(Icons.file_copy_outlined), label: 'Recursos'),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications_none_outlined), label: 'Historial'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.groups_outlined), label: 'Grupo'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.file_copy_outlined), label: 'Recursos'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.notifications_none_outlined),
+              label: 'Historial'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         ]);
   }

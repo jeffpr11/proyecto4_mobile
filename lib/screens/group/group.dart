@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+// import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto4_mobile/constants.dart';
 import 'package:proyecto4_mobile/size_data.dart';
@@ -8,10 +8,10 @@ class Group extends StatefulWidget {
   const Group({Key? key}) : super(key: key);
 
   @override
-  _GroupState createState() => _GroupState();
+  GroupState createState() => GroupState();
 }
 
-class _GroupState extends State<Group> {
+class GroupState extends State<Group> {
   bool loading = false;
 
   @override
@@ -57,7 +57,7 @@ class _GroupState extends State<Group> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.5),
                           child: Column(
-                            children: [
+                            children: const [
                               /* CONTENIDO */
                             ],
                           ),
@@ -67,6 +67,6 @@ class _GroupState extends State<Group> {
                   ),
                 ],
               )
-            : Cargando());
+            : const Cargando());
   }
 }

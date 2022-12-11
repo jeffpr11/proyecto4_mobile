@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+// import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto4_mobile/constants.dart';
 import 'package:proyecto4_mobile/size_data.dart';
@@ -10,10 +10,10 @@ class Event extends StatefulWidget {
   const Event({Key? key}) : super(key: key);
 
   @override
-  _EventState createState() => _EventState();
+  EventState createState() => EventState();
 }
 
-class _EventState extends State<Event> {
+class EventState extends State<Event> {
   bool loading = false;
   List<Widget> contenido = [];
 
@@ -69,19 +69,21 @@ class _EventState extends State<Event> {
                   ),
                 ],
               )
-            : Cargando());
+            : const Cargando());
   }
+
   void buildList() {
     List<Widget> res = [];
     setState(() {
       contenido = [];
     });
     for (int i = 1; i <= 20; i++) {
-        res.add(EventCard(
-            id: i,
-            name: "name ${i}",
-            description: "desc asdfghj asdfqwera adsd astry. Lorem Ipsum has been the industrys standard dummy. ${i}",
-            date: "m${i}/d${i}/yyy${i}"));
+      res.add(EventCard(
+          id: i,
+          name: "name $i",
+          description:
+              "desc asdfghj asdfqwera adsd astry. Lorem Ipsum has been the industrys standard dummy. $i",
+          date: "m$i/d$i/yyy$i"));
     }
     setState(() {
       contenido = res;

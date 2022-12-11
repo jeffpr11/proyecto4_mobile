@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../size_data.dart';
 
-
 class DefaultButton extends StatelessWidget {
   final Function func;
   final String label;
@@ -15,6 +14,7 @@ class DefaultButton extends StatelessWidget {
     required this.func,
     this.colorBg = kSecondaryColor,
     this.colorTxt = kPrimaryLightColor,
+    super.key
   });
 
   @override
@@ -24,7 +24,7 @@ class DefaultButton extends StatelessWidget {
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                   borderRadius:
-                  BorderRadius.circular(getProportionateScreenHeight(20))),
+                      BorderRadius.circular(getProportionateScreenHeight(20))),
             ),
             backgroundColor: MaterialStateProperty.all<Color>(colorBg),
             minimumSize: MaterialStateProperty.all<Size>(Size(

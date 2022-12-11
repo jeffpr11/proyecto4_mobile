@@ -6,11 +6,13 @@ class DefaultInput extends StatelessWidget {
   final Function? validacion;
   final bool isContrasena;
   final String label;
+
   const DefaultInput(
       {required this.controller,
-        this.validacion,
-        required this.isContrasena,
-        required this.label});
+      this.validacion,
+      required this.isContrasena,
+      required this.label,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class DefaultInput extends StatelessWidget {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
           filled: true,
-          fillColor: Color(0xFFF2F6F5),
+          fillColor: const Color(0xFFF2F6F5),
           labelText: label,
           border: const OutlineInputBorder(),
           contentPadding: EdgeInsets.symmetric(

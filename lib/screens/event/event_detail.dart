@@ -1,19 +1,17 @@
-import 'package:dio/dio.dart';
+// import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto4_mobile/constants.dart';
 import 'package:proyecto4_mobile/size_data.dart';
 import 'package:proyecto4_mobile/defaults/default_loading.dart';
 
-import 'event_card.dart';
-
 class Event extends StatefulWidget {
   const Event({Key? key}) : super(key: key);
 
   @override
-  _EventState createState() => _EventState();
+  EventState createState() => EventState();
 }
 
-class _EventState extends State<Event> {
+class EventState extends State<Event> {
   bool loading = true;
 
   @override
@@ -54,7 +52,7 @@ class _EventState extends State<Event> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.5),
+                          padding: const EdgeInsets.symmetric(horizontal: 8.5),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -79,36 +77,36 @@ class _EventState extends State<Event> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   TextButton(
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.grey.shade200,
+                                    ),
+                                    onPressed: () {
+                                      /* LOGICA */
+                                    },
                                     child: Text(
                                       'Lista de participantes: 20',
                                       textScaleFactor: 0.9,
                                     ),
+                                  ),
+                                  TextButton(
                                     style: TextButton.styleFrom(
                                       backgroundColor: Colors.grey.shade200,
                                     ),
                                     onPressed: () {
                                       /* LOGICA */
                                     },
-                                  ),
-                                  TextButton(
-                                    child: Text(
+                                    child: const Text(
                                       'Registrar asistencia',
                                       textScaleFactor: 0.9,
                                     ),
-                                    style: TextButton.styleFrom(
-                                      backgroundColor: Colors.grey.shade200,
-                                    ),
-                                    onPressed: () {
-                                      /* LOGICA */
-                                    },
                                   ),
                                 ],
                               ),
                               Card(
                                 elevation: 0,
                                 child: ListTile(
-                                  contentPadding:
-                                      EdgeInsets.only(left: 0.0, right: 0.0),
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 0.0, right: 0.0),
                                   subtitle: Text(
                                     "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it when an unknown printer took a galley of type and scrambled it when an unknown printer took a galley",
                                     textAlign: TextAlign.justify,
@@ -128,7 +126,7 @@ class _EventState extends State<Event> {
                               Card(
                                 elevation: 0,
                                 child: ListTile(
-                                  contentPadding:
+                                  contentPadding: const
                                       EdgeInsets.only(left: 0.0, right: 5.0),
                                   leading: Image(
                                     image: NetworkImage(
@@ -196,6 +194,6 @@ class _EventState extends State<Event> {
                   ),
                 ],
               )
-            : Cargando());
+            : const Cargando());
   }
 }

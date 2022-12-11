@@ -68,7 +68,7 @@ class FormularioLoginState extends State<FormularioLogin> {
             height: getProportionateScreenHeight(270),
             child: Column(
               children: [
-                if (loading) Cargando(),
+                if (loading) const Cargando(),
                 if (!loading)
                   SizedBox(
                     height: getProportionateScreenHeight(60),
@@ -79,9 +79,8 @@ class FormularioLoginState extends State<FormularioLogin> {
                         setState(() {
                           loading = false;
                         }),
-                        if(resp!=''){
-                          AutoRouter.of(context).push(const HomeRoute())
-                        }
+                        if (resp != '')
+                          {AutoRouter.of(context).push(const HomeRoute())}
                       },
                       label: "Inicia Sesión",
                       colorBg: loading ? kDisableColor : kPrimaryColor,

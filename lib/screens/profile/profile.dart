@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+// import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto4_mobile/constants.dart';
 import 'package:proyecto4_mobile/size_data.dart';
@@ -8,10 +8,10 @@ class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
 
   @override
-  _ProfileState createState() => _ProfileState();
+  ProfileState createState() => ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class ProfileState extends State<Profile> {
   User? userInfo;
   String? name = "John";
   String? lastname = "Doe";
@@ -20,7 +20,7 @@ class _ProfileState extends State<Profile> {
   String? birthdate = "mm/dd/yyyy";
   String? phone = "+593999999999";
   String? address = "Guayaquil";
-  final alertController = new TextEditingController();
+  final alertController = TextEditingController();
 
   @override
   void initState() {
@@ -85,7 +85,7 @@ class _ProfileState extends State<Profile> {
                             icon: const Icon(Icons.edit),
                             color: Colors.black26,
                             onPressed: () {
-                              showAlertDialog(context, "Nombres");
+                              showAlertDialog(context, "nombres");
                             },
                           ),
                         ],
@@ -101,10 +101,7 @@ class _ProfileState extends State<Profile> {
                             children: [
                               const Text(
                                 "Apellidos:",
-                                style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.start,
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               Text(
                                 lastname!,
@@ -115,7 +112,7 @@ class _ProfileState extends State<Profile> {
                             icon: const Icon(Icons.edit),
                             color: Colors.black26,
                             onPressed: () {
-                              showAlertDialog(context, "Nombres");
+                              showAlertDialog(context, "apellidos");
                             },
                           ),
                         ],
@@ -132,7 +129,6 @@ class _ProfileState extends State<Profile> {
                               const Text(
                                 "Correo Electrónico:",
                                 style: TextStyle(fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.left,
                               ),
                               Text(
                                 email!,
@@ -143,7 +139,7 @@ class _ProfileState extends State<Profile> {
                             icon: const Icon(Icons.edit),
                             color: Colors.black26,
                             onPressed: () {
-                              showAlertDialog(context, "Nombres");
+                              showAlertDialog(context, "correo");
                             },
                           ),
                         ],
@@ -160,7 +156,6 @@ class _ProfileState extends State<Profile> {
                               const Text(
                                 "Cédula:",
                                 style: TextStyle(fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.left,
                               ),
                               Text(
                                 id!,
@@ -171,7 +166,7 @@ class _ProfileState extends State<Profile> {
                             icon: const Icon(Icons.edit),
                             color: Colors.black26,
                             onPressed: () {
-                              showAlertDialog(context, "Nombres");
+                              showAlertDialog(context, "cédula");
                             },
                           ),
                         ],
@@ -198,7 +193,7 @@ class _ProfileState extends State<Profile> {
                             icon: const Icon(Icons.edit),
                             color: Colors.black26,
                             onPressed: () {
-                              showAlertDialog(context, "Nombres");
+                              showAlertDialog(context, "fecha");
                             },
                           ),
                         ],
@@ -225,7 +220,7 @@ class _ProfileState extends State<Profile> {
                             icon: const Icon(Icons.edit),
                             color: Colors.black26,
                             onPressed: () {
-                              showAlertDialog(context, "Nombres");
+                              showAlertDialog(context, "teléfono");
                             },
                           ),
                         ],
@@ -252,7 +247,7 @@ class _ProfileState extends State<Profile> {
                             icon: const Icon(Icons.edit),
                             color: Colors.black26,
                             onPressed: () {
-                              showAlertDialog(context, "Nombres");
+                              showAlertDialog(context, "dirección");
                             },
                           ),
                         ],
@@ -329,7 +324,7 @@ class _ProfileState extends State<Profile> {
   showAlertDialog(BuildContext context, var entrada) {
     // set up the buttons
     Widget continueButton = TextButton(
-      child: Text("Continue"),
+      child: const Text("Continue"),
       onPressed: () {
         debugPrint(alertController.text);
 

@@ -1,7 +1,7 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:proyecto4_mobile/constants.dart';
-import 'package:proyecto4_mobile/routes/router.gr.dart';
+// import 'package:auto_route/auto_route.dart';
+// import 'package:proyecto4_mobile/constants.dart';
+// import 'package:proyecto4_mobile/routes/router.gr.dart';
 import 'package:proyecto4_mobile/size_data.dart';
 
 class EventCard extends StatefulWidget {
@@ -26,8 +26,7 @@ class EventCardState extends State<EventCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-          vertical: 5.0),
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Container(
@@ -50,14 +49,11 @@ class EventCardState extends State<EventCard> {
               ),
               Expanded(
                 child: Column(
-                  mainAxisAlignment:
-                  MainAxisAlignment.center,
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
-                      height:
-                      getProportionateScreenHeight(5),
+                      height: getProportionateScreenHeight(5),
                     ),
                     Text(
                       widget.name,
@@ -71,15 +67,16 @@ class EventCardState extends State<EventCard> {
                       textAlign: TextAlign.justify,
                     ),
                     Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(widget.date),
                         TextButton(
-                          child: Text('Detalle >'),
-                          onPressed: () {/*
+                          child: const Text('Detalle >'),
+                          onPressed: () {
+                            /*
                            widget.id
-                           */},
+                           */
+                          },
                         ),
                       ],
                     ),
