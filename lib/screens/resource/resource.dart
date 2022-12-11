@@ -13,51 +13,27 @@ class Resource extends StatefulWidget {
 
 class _ResourceState extends State<Resource> {
   bool loading = true;
-  // List<Internship> internships = [];
-  // List<Widget> contenido = [];
 
   @override
   void initState() {
     super.initState();
-    // getInternships();
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
         child: !loading
-            ? CustomScrollView(slivers: [
-          SliverFillRemaining(
+            ? CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
               hasScrollBody: false,
               child: Column(
                 children: [
                   SizedBox(
-                    height: getProportionateScreenHeight(40),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // SizedBox(
-                      //     height: getProportionateScreenHeight(40),
-                      //     width: getProportionateScreenWidth(210),
-                      //     child: DefaultInput(
-                      //         controller: searchController,
-                      //         isContrasena: false,
-                      //         label: 'Buscar...')),
-                      // TextButton.icon(
-                      //     onPressed: buildList,
-                      //     icon: Icon(
-                      //       Icons.search,
-                      //       color: kDisableColor,
-                      //     ),
-                      //     label: Text(''))
-                    ],
+                    height: getProportionateScreenHeight(20),
                   ),
                   SizedBox(
-                    height: getProportionateScreenHeight(10),
-                  ),
-                  SizedBox(
-                    width: getProportionateScreenWidth(290),
+                    width: getProportionateScreenWidth(350),
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border(
@@ -65,23 +41,32 @@ class _ResourceState extends State<Resource> {
                         ),
                       ),
                       child: const Text(
-                        'Resultados',
-                        textScaleFactor: 1.2,
+                        'RECURSOS',
+                        textScaleFactor: 1.3,
+                        textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: kPrimaryColor),
+                          fontWeight: FontWeight.bold,
+                          color: kPrimaryColor,
+                        ),
                       ),
                     ),
                   ),
                   SizedBox(
-                    height: getProportionateScreenHeight(10),
+                    height: getProportionateScreenHeight(7.5),
                   ),
-                  // Column(
-                  //   children: contenido,
-                  // )
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.5),
+                    child: Column(
+                      children: [
+                        /* CONTENIDO */
+                      ],
+                    ),
+                  ),
                 ],
-              ))
-        ])
+              ),
+            ),
+          ],
+        )
             : Cargando());
   }
 }

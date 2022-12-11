@@ -15,13 +15,11 @@ class Event extends StatefulWidget {
 
 class _EventState extends State<Event> {
   bool loading = false;
-  // List<Internship> internships = [];
   List<Widget> contenido = [];
 
   @override
   void initState() {
     super.initState();
-    // getInternships();
     buildList();
   }
 
@@ -61,7 +59,7 @@ class _EventState extends State<Event> {
                           height: getProportionateScreenHeight(7.5),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.5),
+                          padding: const EdgeInsets.symmetric(horizontal: 8.5),
                           child: Column(
                             children: contenido,
                           ),

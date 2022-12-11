@@ -62,7 +62,7 @@ class EventCardState extends State<EventCard> {
                     Text(
                       widget.name,
                       textScaleFactor: 1.2,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
