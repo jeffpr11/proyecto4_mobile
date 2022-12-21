@@ -12,7 +12,7 @@ class Record extends StatefulWidget {
 }
 
 class RecordState extends State<Record> {
-  bool loading = true;
+  bool loading = false;
 
   @override
   void initState() {
@@ -41,7 +41,7 @@ class RecordState extends State<Record> {
                               ),
                             ),
                             child: const Text(
-                              'HISTORIAL?',
+                              'Historial',
                               textScaleFactor: 1.3,
                               textAlign: TextAlign.center,
                               style: TextStyle(
@@ -57,8 +57,29 @@ class RecordState extends State<Record> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.5),
                           child: Column(
-                            children: const [
-                              /* CONTENIDO */
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5.0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Container(
+                                    color: Colors.blueGrey.shade100,
+                                    child: const ListTile(
+                                      leading: Icon(
+                                        Icons.person_add_alt,
+                                        color: Colors.green,
+                                        size: 40.0,
+                                        semanticLabel:
+                                            'Text to announce in accessibility modes',
+                                      ),
+                                      title: Text("Fuiste agregado!"),
+                                      subtitle: Text(
+                                          "<Administrador> te agregó al ministerio 1."),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),

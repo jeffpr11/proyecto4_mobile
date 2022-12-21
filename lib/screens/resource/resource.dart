@@ -12,7 +12,7 @@ class Resource extends StatefulWidget {
 }
 
 class ResourceState extends State<Resource> {
-  bool loading = true;
+  bool loading = false;
 
   @override
   void initState() {
@@ -21,52 +21,73 @@ class ResourceState extends State<Resource> {
 
   @override
   Widget build(BuildContext context) {
+    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return SizedBox(
         child: !loading
-            ? CustomScrollView(
-                slivers: [
-                  SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: Column(
+            ? ListView(
+          children: <Widget>[
+            SizedBox(
+              height: getProportionateScreenHeight(20),
+            ),
+            Column(
+              children: [
+                SizedBox(
+                  width: getProportionateScreenWidth(350),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: Colors.grey.shade300),
+                      ),
+                    ),
+                    child: const Text(
+                      'Recursos del ministerio 1',
+                      textScaleFactor: 1.3,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: kPrimaryColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: getProportionateScreenHeight(7.5),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.5),
+              child: GridView.count(
+                crossAxisCount: isPortrait ? 3 : 5,
+                physics: NeverScrollableScrollPhysics(), // to disable GridView's scrolling
+                shrinkWrap: true, // You won't see infinite size error
+                children:
+                List.generate(20, (index) {
+                  return
+                    Column(
                       children: [
-                        SizedBox(
-                          height: getProportionateScreenHeight(20),
+                        Image(
+                          height: getProportionateScreenHeight(isPortrait ? 90 : 190),
+                          image: NetworkImage(
+                            'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
+                          ),
                         ),
-                        SizedBox(
-                          width: getProportionateScreenWidth(350),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(color: Colors.grey.shade300),
-                              ),
-                            ),
-                            child: const Text(
-                              'RECURSOS',
-                              textScaleFactor: 1.3,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: kPrimaryColor,
-                              ),
-                            ),
+                        Text(
+                          'Item $index',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                         SizedBox(
                           height: getProportionateScreenHeight(7.5),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.5),
-                          child: Column(
-                            children: const [
-                              /* CONTENIDO */
-                            ],
-                          ),
-                        ),
                       ],
-                    ),
-                  ),
-                ],
-              )
+                    );
+                }),
+              ),
+            ),
+          ],
+        )
             : const Cargando());
   }
 }
