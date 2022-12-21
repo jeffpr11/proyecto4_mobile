@@ -9,6 +9,8 @@ import 'package:proyecto4_mobile/user_storage.dart';
 import 'package:proyecto4_mobile/size_data.dart';
 import 'package:proyecto4_mobile/routes/router.gr.dart';
 
+import 'package:jwt_decode/jwt_decode.dart';
+
 class FormularioLogin extends StatefulWidget {
   final TextEditingController usuarioController;
   final TextEditingController contrasenaController;
@@ -27,7 +29,7 @@ class FormularioLogin extends StatefulWidget {
 class FormularioLoginState extends State<FormularioLogin> {
   bool recuerdame = false;
   bool loading = false;
-  String resp = '';
+  int userId = -9;
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -79,7 +81,7 @@ class FormularioLoginState extends State<FormularioLogin> {
                         setState(() {
                           loading = false;
                         }),
-                        if (resp != '')
+                        if (userId != -9)
                           {AutoRouter.of(context).push(const HomeRoute())}
                       },
                       label: "Inicia Sesión",
@@ -106,15 +108,18 @@ class FormularioLoginState extends State<FormularioLogin> {
         'username': widget.usuarioController.text,
         'password': widget.contrasenaController.text
       });
+      Map<String, dynamic> payload = Jwt.parseJwt(response.data['token']);
       setState(() {
-        resp = response.data['access'];
+        if (payload['profile_id'] == -1) {
+          userId = -9;
+        } else {
+          userId = payload['profile_id'];
+        }
       });
-      UserSecureStorage.setToken(response.data['access'] as String);
+      UserSecureStorage.setToken(response.data['token'] as String);
+      UserSecureStorage.setUserId(userId);
     } catch (e) {
       debugPrint(e.toString());
-      setState(() {
-        resp = '';
-      });
     }
   }
 

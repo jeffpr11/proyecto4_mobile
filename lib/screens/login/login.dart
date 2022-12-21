@@ -29,6 +29,7 @@ class LoginState extends State<Login> {
             fontSize: 18,
           ),
         ),
+        automaticallyImplyLeading: false,
         backgroundColor: kPrimaryColor,
       ),
       body: SizedBox(
@@ -50,7 +51,7 @@ class LoginState extends State<Login> {
       ),
       const Text(
         "INICIO DE SESION",
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        style: TextStyle(fontWeight: FontWeight.bold),
       ),
       SizedBox(
         height: getProportionateScreenHeight(100),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-// import 'package:auto_route/auto_route.dart';
-// import 'package:proyecto4_mobile/constants.dart';
-// import 'package:proyecto4_mobile/routes/router.gr.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:proyecto4_mobile/constants.dart';
+import 'package:proyecto4_mobile/routes/router.gr.dart';
 import 'package:proyecto4_mobile/size_data.dart';
 
 class EventCard extends StatefulWidget {
@@ -73,9 +73,7 @@ class EventCardState extends State<EventCard> {
                         TextButton(
                           child: const Text('Detalle >'),
                           onPressed: () {
-                            /*
-                           widget.id
-                           */
+                            AutoRouter.of(context).push(EventDetailRoute(id:1));
                           },
                         ),
                       ],

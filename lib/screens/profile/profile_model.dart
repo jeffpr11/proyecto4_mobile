@@ -1,10 +1,10 @@
-class User{
+class User {
   int? id;
   String? cardId;
   String? city;
   String? bornDate;
   String? address;
-  String? cellphone;
+  String? phone_1;
   int? user;
   String? firstName;
   String? lastName;
@@ -19,7 +19,7 @@ class User{
     this.cardId,
     this.bornDate,
     this.address,
-    this.cellphone,
+    this.phone_1,
     this.city,
     this.user,
     this.username,

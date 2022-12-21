@@ -1,7 +1,12 @@
 // import 'package:dio/dio.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto4_mobile/constants.dart';
+import 'package:proyecto4_mobile/routes/router.gr.dart';
 import 'package:proyecto4_mobile/size_data.dart';
+import 'package:proyecto4_mobile/user_storage.dart';
+import 'package:proyecto4_mobile/defaults/default_loading.dart';
 import 'profile_model.dart';
 
 class Profile extends StatefulWidget {
@@ -12,286 +17,281 @@ class Profile extends StatefulWidget {
 }
 
 class ProfileState extends State<Profile> {
+  bool loading = true;
   User? userInfo;
   String? name = "John";
   String? lastname = "Doe";
   String? email = "jdoe@mail.com";
   String? id = "9999999999";
   String? birthdate = "mm/dd/yyyy";
-  String? phone = "+593999999999";
+  String? phone_1 = "+593999999999";
   String? address = "Guayaquil";
+
+  TextEditingController dateController = TextEditingController();
   final alertController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    // getUsrInfo();
+    dateController.text = "";
+    getUsrInfo();
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      child: CustomScrollView(
-        slivers: [
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: getProportionateScreenHeight(20),
-                ),
-                SizedBox(
-                  width: getProportionateScreenWidth(350),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.grey.shade300),
-                      ),
-                    ),
-                    child: const Text('Perfil',
-                        textScaleFactor: 1.3,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: kPrimaryColor,
+        child: !loading
+            ? CustomScrollView(
+                slivers: [
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: getProportionateScreenHeight(20),
                         ),
-                        textAlign: TextAlign.center),
-                  ),
-                ),
-                SizedBox(
-                  height: getProportionateScreenHeight(20),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.5),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
+                        SizedBox(
+                          width: getProportionateScreenWidth(350),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(color: Colors.grey.shade300),
+                              ),
+                            ),
+                            child: const Text('Perfil',
+                                textScaleFactor: 1.3,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: kPrimaryColor,
+                                ),
+                                textAlign: TextAlign.center),
+                          ),
+                        ),
+                        SizedBox(
+                          height: getProportionateScreenHeight(20),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.5),
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                "Nombres:",
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Nombres:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        name!,
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                              Text(
-                                name!,
-                                textAlign: TextAlign.start,
+                              SizedBox(
+                                height: getProportionateScreenHeight(20),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Apellidos:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        lastname!,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: getProportionateScreenHeight(20),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Correo Electrónico:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        email!,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: getProportionateScreenHeight(20),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Cédula:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        id!,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: getProportionateScreenHeight(20),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Fecha de nacimiento:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        birthdate!,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: getProportionateScreenHeight(20),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Teléfono:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        phone_1!,
+                                      ),
+                                    ],
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.edit),
+                                    color: Colors.black26,
+                                    onPressed: () {
+                                      showAlertDialog(
+                                          context, "teléfono", phone_1!);
+                                    },
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: getProportionateScreenHeight(20),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Dirección:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        address!,
+                                      ),
+                                    ],
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.edit),
+                                    color: Colors.black26,
+                                    onPressed: () {
+                                      showAlertDialog(
+                                          context, "dirección", address!);
+                                    },
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: getProportionateScreenHeight(20),
                               ),
                             ],
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            color: Colors.black26,
-                            onPressed: () {
-                              showAlertDialog(context, "nombres");
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: getProportionateScreenHeight(20),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Apellidos:",
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                              style: ButtonStyle(
+                                foregroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.red),
                               ),
-                              Text(
-                                lastname!,
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('CERRAR SESION'),
+                            ),
+                            SizedBox(
+                              width: getProportionateScreenWidth(20),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: kPrimaryColor, // background
                               ),
-                            ],
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            color: Colors.black26,
-                            onPressed: () {
-                              showAlertDialog(context, "apellidos");
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: getProportionateScreenHeight(20),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Correo Electrónico:",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                email!,
-                              ),
-                            ],
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            color: Colors.black26,
-                            onPressed: () {
-                              showAlertDialog(context, "correo");
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: getProportionateScreenHeight(20),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Cédula:",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                id!,
-                              ),
-                            ],
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            color: Colors.black26,
-                            onPressed: () {
-                              showAlertDialog(context, "cédula");
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: getProportionateScreenHeight(20),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Fecha de nacimiento:",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                birthdate!,
-                              ),
-                            ],
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            color: Colors.black26,
-                            onPressed: () {
-                              showAlertDialog(context, "fecha");
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: getProportionateScreenHeight(20),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Teléfono:",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                phone!,
-                              ),
-                            ],
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            color: Colors.black26,
-                            onPressed: () {
-                              showAlertDialog(context, "teléfono");
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: getProportionateScreenHeight(20),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Dirección:",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                address!,
-                              ),
-                            ],
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            color: Colors.black26,
-                            onPressed: () {
-                              showAlertDialog(context, "dirección");
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: getProportionateScreenHeight(20),
-                      ),
-                    ],
-                  ),
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      style: ButtonStyle(
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.red),
-                      ),
-                      onPressed: () {},
-                      child: const Text('CERRAR SESION'),
+                              onPressed: () {},
+                              child: const Text('GUARDAR CAMBIOS'),
+                            )
+                          ],
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      width: getProportionateScreenWidth(20),
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: kPrimaryColor, // background
-                        onPrimary: Colors.white, // foreground
-                      ),
-                      onPressed: () {},
-                      child: const Text('GUARDAR CAMBIOS'),
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+                  ),
+                ],
+              )
+            : const Cargando());
   }
 
-  /*Future<void> getUsrInfo() async {
+  Future<void> getUsrInfo() async {
     var usrId = await UserSecureStorage.getUserId();
     try {
       final Response resUserData = await dioConst.get(
@@ -300,35 +300,38 @@ class ProfileState extends State<Profile> {
       setState(() {
         userInfo = User(
             id: resUserData.data['id'],
-            firstName: resUserData.data['user_data']['first_name'],
-            lastName: resUserData.data['user_data']['last_name'],
-            email: resUserData.data['user_data']['email'],
+            firstName: resUserData.data['user_details']['first_name'],
+            lastName: resUserData.data['user_details']['last_name'],
+            email: resUserData.data['user_details']['email'],
             cardId: resUserData.data['card_id'],
             bornDate: resUserData.data['born_date'],
-            cellphone: resUserData.data['cellphone']);
+            phone_1: resUserData.data['tel_1'],
             address: resUserData.data['address'],
-            username: resUserData.data['user_data']['username'],
-      });
-      debugPrint(resUserData.data.toString());
-      setState(() {
-        name = '${userInfo!.firstName} ${userInfo!.lastName}';
-        phone = userInfo!.cellphone;
+            username: resUserData.data['user_details']['username']);
+        name = userInfo!.firstName;
+        lastname = userInfo!.lastName;
+        phone_1 = userInfo!.phone_1;
         email = userInfo!.email;
         id = userInfo!.cardId;
+        birthdate = userInfo!.bornDate;
+        address = userInfo!.address;
+
+        loading = false;
       });
     } catch (e) {
       debugPrint(e.toString());
     }
-  }*/
+  }
 
-  showAlertDialog(BuildContext context, var entrada) {
+  showAlertDialog(BuildContext context, var entrada, String txt) {
     // set up the buttons
     Widget continueButton = TextButton(
       child: const Text("Continue"),
       onPressed: () {
+        setState(() {
+          alertController.text = txt;
+        });
         debugPrint(alertController.text);
-
-        alertController.text = '';
         // updateField();
       },
     );
@@ -349,24 +352,18 @@ class ProfileState extends State<Profile> {
     );
   }
 
-  /*Future<void> updateField() async {
+  Future<void> updateField() async {
     debugPrint(userInfo.toString());
     debugPrint('$kUrl/user/profile/${userInfo!.id!}/');
     try {
       final Response response =
-      await dioConst.put('$kUrl/user/intern/${userInfo!.id}/', data: {
-        'born_date': userInfo!.bornDate,
-        'first_name': userInfo!.firstName,
-        'last_name': userInfo!.lastName,
-        'email': userInfo!.email,
-        'card_id': userInfo!.cardId,
+          await dioConst.put('$kUrl/user/intern/${userInfo!.id}/', data: {
         'address': userInfo!.address!,
-        'cellphone': userInfo!.cellphone,
-        'username': userInfo!.username,
+        'cellphone': userInfo!.phone_1,
       });
       await getUsrInfo();
     } catch (e) {
       debugPrint(e.toString());
     }
-  }*/
+  }
 }

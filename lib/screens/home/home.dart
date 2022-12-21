@@ -41,6 +41,7 @@ class HomeState extends State<Home> {
             fontSize: 18,
           ),
         ),
+        automaticallyImplyLeading: false,
         backgroundColor: kPrimaryColor,
       ),
       body: _screens[current],

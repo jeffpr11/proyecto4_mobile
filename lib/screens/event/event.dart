@@ -62,6 +62,7 @@ class EventState extends State<Event> {
                           padding: const EdgeInsets.symmetric(horizontal: 8.5),
                           child: Column(
                             children: contenido,
+
                           ),
                         ),
                       ],
