@@ -1,9 +1,7 @@
 // import 'package:dio/dio.dart';
-import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto4_mobile/constants.dart';
-import 'package:proyecto4_mobile/routes/router.gr.dart';
 import 'package:proyecto4_mobile/size_data.dart';
 import 'package:proyecto4_mobile/user_storage.dart';
 import 'package:proyecto4_mobile/defaults/default_loading.dart';
@@ -19,21 +17,14 @@ class Profile extends StatefulWidget {
 class ProfileState extends State<Profile> {
   bool loading = true;
   User? userInfo;
-  String? name = "John";
-  String? lastname = "Doe";
-  String? email = "jdoe@mail.com";
-  String? id = "9999999999";
-  String? birthdate = "mm/dd/yyyy";
-  String? phone_1 = "+593999999999";
-  String? address = "Guayaquil";
-
-  TextEditingController dateController = TextEditingController();
-  final alertController = TextEditingController();
+  TextEditingController phoneCtrl = TextEditingController();
+  TextEditingController addressCtrl = TextEditingController();
+  bool _phoneVld = true;
+  bool _addressVld = true;
 
   @override
   void initState() {
     super.initState();
-    dateController.text = "";
     getUsrInfo();
   }
 
@@ -89,7 +80,7 @@ class ProfileState extends State<Profile> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
-                                        name!,
+                                        userInfo!.firstName!,
                                         textAlign: TextAlign.start,
                                       ),
                                     ],
@@ -113,7 +104,7 @@ class ProfileState extends State<Profile> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
-                                        lastname!,
+                                        userInfo!.lastName!,
                                       ),
                                     ],
                                   ),
@@ -136,7 +127,7 @@ class ProfileState extends State<Profile> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
-                                        email!,
+                                        userInfo!.email!,
                                       ),
                                     ],
                                   ),
@@ -159,7 +150,7 @@ class ProfileState extends State<Profile> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
-                                        id!,
+                                        userInfo!.cardId!,
                                       ),
                                     ],
                                   ),
@@ -182,7 +173,7 @@ class ProfileState extends State<Profile> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
-                                        birthdate!,
+                                        userInfo!.bornDate!,
                                       ),
                                     ],
                                   ),
@@ -191,62 +182,48 @@ class ProfileState extends State<Profile> {
                               SizedBox(
                                 height: getProportionateScreenHeight(20),
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Teléfono:",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        phone_1!,
-                                      ),
-                                    ],
+                                  const Text(
+                                    "Teléfono:",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
-                                  IconButton(
-                                    icon: const Icon(Icons.edit),
-                                    color: Colors.black26,
-                                    onPressed: () {
-                                      showAlertDialog(
-                                          context, "teléfono", phone_1!);
-                                    },
+                                  SizedBox(
+                                    width: getProportionateScreenWidth(200),
+                                    child: TextField(
+                                      controller: phoneCtrl,
+                                      decoration: InputDecoration(
+                                          hintText: "Actualiza telefono",
+                                          errorText: _phoneVld
+                                              ? null
+                                              : "Teléfono debe tener 10 dígitos"),
+                                    ),
                                   ),
                                 ],
                               ),
                               SizedBox(
                                 height: getProportionateScreenHeight(20),
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Dirección:",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        address!,
-                                      ),
-                                    ],
+                                  const Text(
+                                    "Dirección:",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
-                                  IconButton(
-                                    icon: const Icon(Icons.edit),
-                                    color: Colors.black26,
-                                    onPressed: () {
-                                      showAlertDialog(
-                                          context, "dirección", address!);
-                                    },
+                                  SizedBox(
+                                    width: getProportionateScreenWidth(200),
+                                    child: TextField(
+                                      controller: addressCtrl,
+                                      decoration: InputDecoration(
+                                          hintText: "Actualiza dirección",
+                                          errorText: _addressVld
+                                              ? null
+                                              : "Dirección muy corta"),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -278,7 +255,9 @@ class ProfileState extends State<Profile> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: kPrimaryColor, // background
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                update();
+                              },
                               child: const Text('GUARDAR CAMBIOS'),
                             )
                           ],
@@ -293,29 +272,26 @@ class ProfileState extends State<Profile> {
 
   Future<void> getUsrInfo() async {
     var usrId = await UserSecureStorage.getUserId();
+    var tkn = await UserSecureStorage.getToken();
     try {
-      final Response resUserData = await dioConst.get(
-        '$kUrl/user/profile/$usrId/',
-      );
+      final Response resUserData =
+          await dioConst.get('$kUrl/user/profile/$usrId/',
+              options: Options(headers: {
+                "Authorization": "Bearer $tkn",
+              }));
+      userInfo = User(
+          id: resUserData.data['id'],
+          firstName: resUserData.data['user_details']['first_name'],
+          lastName: resUserData.data['user_details']['last_name'],
+          email: resUserData.data['user_details']['email'],
+          cardId: resUserData.data['card_id'],
+          bornDate: resUserData.data['born_date'],
+          phone_1: resUserData.data['tel_1'],
+          address: resUserData.data['address'],
+          username: resUserData.data['user_details']['username']);
+      phoneCtrl.text = userInfo!.phone_1!;
+      addressCtrl.text = userInfo!.address!;
       setState(() {
-        userInfo = User(
-            id: resUserData.data['id'],
-            firstName: resUserData.data['user_details']['first_name'],
-            lastName: resUserData.data['user_details']['last_name'],
-            email: resUserData.data['user_details']['email'],
-            cardId: resUserData.data['card_id'],
-            bornDate: resUserData.data['born_date'],
-            phone_1: resUserData.data['tel_1'],
-            address: resUserData.data['address'],
-            username: resUserData.data['user_details']['username']);
-        name = userInfo!.firstName;
-        lastname = userInfo!.lastName;
-        phone_1 = userInfo!.phone_1;
-        email = userInfo!.email;
-        id = userInfo!.cardId;
-        birthdate = userInfo!.bornDate;
-        address = userInfo!.address;
-
         loading = false;
       });
     } catch (e) {
@@ -323,47 +299,39 @@ class ProfileState extends State<Profile> {
     }
   }
 
-  showAlertDialog(BuildContext context, var entrada, String txt) {
-    // set up the buttons
-    Widget continueButton = TextButton(
-      child: const Text("Continue"),
-      onPressed: () {
-        setState(() {
-          alertController.text = txt;
-        });
-        debugPrint(alertController.text);
-        // updateField();
-      },
-    );
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Ingrese $entrada: "),
-      content: TextFormField(controller: alertController),
-      actions: [
-        continueButton,
-      ],
-    );
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-  Future<void> updateField() async {
-    debugPrint(userInfo.toString());
-    debugPrint('$kUrl/user/profile/${userInfo!.id!}/');
-    try {
-      final Response response =
-          await dioConst.put('$kUrl/user/intern/${userInfo!.id}/', data: {
-        'address': userInfo!.address!,
-        'cellphone': userInfo!.phone_1,
+  Future<void> update() async {
+    setState(() {
+      _phoneVld = phoneCtrl.text.trim().length != 10 || phoneCtrl.text.isEmpty
+          ? false
+          : true;
+      _addressVld =
+          addressCtrl.text.trim().length < 3 || addressCtrl.text.isEmpty
+              ? false
+              : true;
+    });
+    if (_phoneVld && _addressVld) {
+      setState(() {
+        loading = true;
       });
-      await getUsrInfo();
-    } catch (e) {
-      debugPrint(e.toString());
+      var tkn = await UserSecureStorage.getToken();
+      try {
+        final Response response =
+            await dioConst.put('$kUrl/user/profile/${userInfo!.id}/',
+                options: Options(headers: {
+                  "Authorization": "Bearer $tkn",
+                }),
+                data: {
+              'tel_1': phoneCtrl.text,
+              'address': addressCtrl.text,
+            });
+        SnackBar snackbar =
+            const SnackBar(content: Text("Perfile actualizado"));
+        await getUsrInfo();
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(snackbar);
+      } catch (e) {
+        debugPrint(e.toString());
+      }
     }
   }
 }
