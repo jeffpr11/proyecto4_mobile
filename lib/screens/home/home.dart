@@ -42,7 +42,7 @@ class HomeState extends State<Home> {
           ),
         ),
         automaticallyImplyLeading: false,
-        backgroundColor: kPrimaryColor,
+        backgroundColor: kSecondaryColor,
       ),
       body: _screens[current],
       bottomNavigationBar: _navigationBar(),
@@ -53,6 +53,7 @@ class HomeState extends State<Home> {
     return BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedItemColor: kPrimaryColor,
+        unselectedItemColor: kSecondaryColor,
         showUnselectedLabels: true,
         currentIndex: current,
         onTap: _navigationHandler,

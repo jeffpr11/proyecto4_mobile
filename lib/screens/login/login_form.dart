@@ -109,18 +109,35 @@ class FormularioLoginState extends State<FormularioLogin> {
         'password': widget.contrasenaController.text
       });
       Map<String, dynamic> payload = Jwt.parseJwt(response.data['token']);
-      setState(() {
-        if (payload['profile_id'] == -1) {
+      if (payload['profile_id'] == -1) {
+        setState(() {
           userId = -9;
-        } else {
+        });
+        feedback(context, "No cuenta con perfil. Contacte Administrador.");
+      } else {
+        setState(() {
           userId = payload['profile_id'];
-        }
-      });
-      UserSecureStorage.setToken(response.data['token'] as String);
-      UserSecureStorage.setUserId(userId);
+        });
+        String tkn = response.data['token'] as String;
+        final Response res =
+            await dioConst.get('$kUrl/organizations/group/?members=$userId',
+                options: Options(headers: {
+                  "Authorization": "Bearer $tkn",
+                }));
+        UserSecureStorage.setToken(tkn);
+        UserSecureStorage.setUserId(userId);
+        UserSecureStorage.setGroupId(res.data['results'][0]['id']);
+      }
     } catch (e) {
       debugPrint(e.toString());
+      feedback(context, "Credenciales incorrectas.");
     }
+  }
+
+  feedback(BuildContext context, String msg) {
+    SnackBar snackbar = SnackBar(content: Text(msg));
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 
   // Widget _recuerdame() {

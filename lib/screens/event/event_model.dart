@@ -1,21 +1,20 @@
-class Event {
+class EventM {
   int? id;
   String? name;
   String? description;
   String? type;
-  String? image;
-  String? group;
   String? startDate;
   String? endDate;
+  String? route;
+  int? totalRecords;
 
-  Event({
-    this.id,
-    this.name,
-    this.description,
-    this.type,
-    this.image,
-    this.group,
-    this.startDate,
-    this.endDate
-  });
+  EventM(
+      {this.id,
+      this.name,
+      this.description,
+      this.type,
+      this.startDate,
+      this.endDate,
+      this.route,
+      this.totalRecords});
 }

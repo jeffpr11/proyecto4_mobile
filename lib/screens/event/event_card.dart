@@ -9,13 +9,15 @@ class EventCard extends StatefulWidget {
   final String name;
   final String description;
   final String date;
+  final String route;
 
   const EventCard(
       {Key? key,
       required this.id,
       required this.name,
       required this.description,
-      required this.date})
+      required this.date,
+      required this.route})
       : super(key: key);
 
   @override
@@ -31,15 +33,21 @@ class EventCardState extends State<EventCard> {
         borderRadius: BorderRadius.circular(10),
         child: Container(
           height: 125,
-          color: Colors.blueGrey.shade100,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [kPrimaryColorGradient, kPrimaryLightColor],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
           child: Row(
             children: <Widget>[
-              Container(
+              SizedBox(
                 width: 90,
                 height: 125,
                 child: Image(
                   image: NetworkImage(
-                    'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
+                    widget.route,
                   ),
                   fit: BoxFit.fitHeight,
                 ),
@@ -71,9 +79,16 @@ class EventCardState extends State<EventCard> {
                       children: [
                         Text(widget.date),
                         TextButton(
-                          child: const Text('Detalle >'),
+                          child: const Text(
+                            'Detalle >',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              // color: kPrimaryColor,
+                            ),
+                          ),
                           onPressed: () {
-                            AutoRouter.of(context).push(EventDetailRoute(id:1));
+                            AutoRouter.of(context)
+                                .push(EventDetailRoute(id: widget.id));
                           },
                         ),
                       ],

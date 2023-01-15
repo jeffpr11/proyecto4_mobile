@@ -1,4 +1,3 @@
-// import 'package:dio/dio.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto4_mobile/constants.dart';
@@ -19,6 +18,7 @@ class ProfileState extends State<Profile> {
   User? userInfo;
   TextEditingController phoneCtrl = TextEditingController();
   TextEditingController addressCtrl = TextEditingController();
+  RegExp regExp = RegExp(r"^09[0-9]{8}$");
   bool _phoneVld = true;
   bool _addressVld = true;
 
@@ -37,6 +37,7 @@ class ProfileState extends State<Profile> {
                   SliverFillRemaining(
                     hasScrollBody: false,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         SizedBox(
                           height: getProportionateScreenHeight(20),
@@ -64,172 +65,25 @@ class ProfileState extends State<Profile> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.5),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Nombres:",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        userInfo!.firstName!,
-                                        textAlign: TextAlign.start,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: getProportionateScreenHeight(20),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Apellidos:",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        userInfo!.lastName!,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: getProportionateScreenHeight(20),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Correo Electrónico:",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        userInfo!.email!,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: getProportionateScreenHeight(20),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Cédula:",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        userInfo!.cardId!,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: getProportionateScreenHeight(20),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Fecha de nacimiento:",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        userInfo!.bornDate!,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: getProportionateScreenHeight(20),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Teléfono:",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(
-                                    width: getProportionateScreenWidth(200),
-                                    child: TextField(
-                                      controller: phoneCtrl,
-                                      decoration: InputDecoration(
-                                          hintText: "Actualiza telefono",
-                                          errorText: _phoneVld
-                                              ? null
-                                              : "Teléfono debe tener 10 dígitos"),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: getProportionateScreenHeight(20),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Dirección:",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(
-                                    width: getProportionateScreenWidth(200),
-                                    child: TextField(
-                                      controller: addressCtrl,
-                                      decoration: InputDecoration(
-                                          hintText: "Actualiza dirección",
-                                          errorText: _addressVld
-                                              ? null
-                                              : "Dirección muy corta"),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: getProportionateScreenHeight(20),
-                              ),
+                              readOnlyTextField(
+                                  "Nombres", userInfo!.firstName!),
+                              readOnlyTextField(
+                                  "Apellidos", userInfo!.lastName!),
+                              readOnlyTextField("Email", userInfo!.email!),
+                              readOnlyTextField("Cédula", userInfo!.cardId!),
+                              readOnlyTextField(
+                                  "Fecha de nacimiento", userInfo!.bornDate!),
+                              buildTextField(
+                                  "Teléfono",
+                                  phoneCtrl,
+                                  "Actualiza telefono",
+                                  _phoneVld ? null : "Teléfono inválido"),
+                              buildTextField(
+                                  "Dirección",
+                                  addressCtrl,
+                                  "Actualiza dirección",
+                                  _addressVld ? null : "Dirección muy corta"),
                             ],
                           ),
                         ),
@@ -310,9 +164,6 @@ class ProfileState extends State<Profile> {
               : true;
     });
     if (_phoneVld && _addressVld) {
-      setState(() {
-        loading = true;
-      });
       var tkn = await UserSecureStorage.getToken();
       try {
         final Response response =
@@ -325,7 +176,7 @@ class ProfileState extends State<Profile> {
               'address': addressCtrl.text,
             });
         SnackBar snackbar =
-            const SnackBar(content: Text("Perfile actualizado"));
+            const SnackBar(content: Text("Perfil actualizado"));
         await getUsrInfo();
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(snackbar);
@@ -333,5 +184,52 @@ class ProfileState extends State<Profile> {
         debugPrint(e.toString());
       }
     }
+  }
+
+  readOnlyTextField(String text1, String? text2) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "$text1:",
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        SizedBox(
+          width: getProportionateScreenWidth(200),
+          child: TextField(
+            readOnly: true,
+            decoration: InputDecoration(
+              hintText: text2,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: getProportionateScreenHeight(15),
+        ),
+      ],
+    );
+  }
+
+  buildTextField(
+      String label, TextEditingController txtCtrl, String hint, String? valid) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "$label:",
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        SizedBox(
+          width: getProportionateScreenWidth(200),
+          child: TextField(
+            controller: txtCtrl,
+            decoration: InputDecoration(hintText: hint, errorText: valid),
+          ),
+        ),
+        SizedBox(
+          height: getProportionateScreenHeight(15),
+        ),
+      ],
+    );
   }
 }

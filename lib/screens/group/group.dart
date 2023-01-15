@@ -1,8 +1,11 @@
 // import 'package:dio/dio.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto4_mobile/constants.dart';
 import 'package:proyecto4_mobile/size_data.dart';
+import 'package:proyecto4_mobile/user_storage.dart';
 import 'package:proyecto4_mobile/defaults/default_loading.dart';
+import 'group_model.dart';
 
 class Group extends StatefulWidget {
   const Group({Key? key}) : super(key: key);
@@ -12,11 +15,13 @@ class Group extends StatefulWidget {
 }
 
 class GroupState extends State<Group> {
-  bool loading = false;
+  bool loading = true;
+  GroupM? groupInfo;
 
   @override
   void initState() {
     super.initState();
+    getGroupInfo();
   }
 
   @override
@@ -40,11 +45,11 @@ class GroupState extends State<Group> {
                                 bottom: BorderSide(color: Colors.grey.shade300),
                               ),
                             ),
-                            child: const Text(
-                              'Ministerio 1',
+                            child: Text(
+                              groupInfo!.name!,
                               textScaleFactor: 1.3,
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: kPrimaryColor,
                               ),
@@ -62,12 +67,12 @@ class GroupState extends State<Group> {
                               SizedBox(
                                 height: getProportionateScreenHeight(10),
                               ),
-                              Container(
+                              SizedBox(
                                 height: getProportionateScreenHeight(150),
                                 width: getProportionateScreenWidth(375),
                                 child: Image(
                                   image: NetworkImage(
-                                    'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
+                                    groupInfo!.image!,
                                   ),
                                   fit: BoxFit.cover,
                                 ),
@@ -81,7 +86,7 @@ class GroupState extends State<Group> {
                                   contentPadding: const EdgeInsets.only(
                                       left: 0.0, right: 0.0),
                                   subtitle: Text(
-                                    "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it when an unknown printer took a galley of type and scrambled it when an unknown printer took a galley",
+                                    groupInfo!.description!,
                                     textAlign: TextAlign.justify,
                                   ),
                                 ),
@@ -90,7 +95,7 @@ class GroupState extends State<Group> {
                                 height: getProportionateScreenHeight(10),
                               ),
                               const Text(
-                                'Encargados',
+                                'Encargado',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -103,38 +108,20 @@ class GroupState extends State<Group> {
                                   Column(
                                     children: [
                                       Image(
-                                        height: getProportionateScreenHeight(120),
+                                        height:
+                                            getProportionateScreenHeight(120),
                                         image: NetworkImage(
-                                          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
+                                          groupInfo!.leaderImage!,
                                         ),
                                       ),
-                                      const Text(
-                                        'Encargado 1',
-                                        style: TextStyle(
+                                      Text(
+                                        groupInfo!.leader!,
+                                        style: const TextStyle(
                                           fontWeight: FontWeight.w400,
                                         ),
                                       )
                                     ],
                                   ),
-                                  SizedBox(
-                                    width: getProportionateScreenWidth(10),
-                                  ),
-                                  Column(
-                                    children: [
-                                      Image(
-                                        height: getProportionateScreenHeight(120),
-                                        image: NetworkImage(
-                                          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
-                                        ),
-                                      ),
-                                      const Text(
-                                        'Encargado 2',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      )
-                                    ],
-                                  )
                                 ],
                               )
                             ],
@@ -146,5 +133,37 @@ class GroupState extends State<Group> {
                 ],
               )
             : const Cargando());
+  }
+
+  Future<void> getGroupInfo() async {
+    var usrId = await UserSecureStorage.getUserId();
+    var tkn = await UserSecureStorage.getToken();
+    var tmp = await UserSecureStorage.getGroupId();
+    try {
+      final Response res = await dioConst.get('$kUrl/organizations/group/$tmp/',
+          options: Options(headers: {
+            "Authorization": "Bearer $tkn",
+          }));
+
+      var tmp1 = res.data['leader_details']['img_file'];
+      final Response res1 =
+          await dioConst.get('$kUrl/organizations/image/$tmp1/',
+              options: Options(headers: {
+                "Authorization": "Bearer $tkn",
+              }));
+
+      groupInfo = GroupM(
+          id: res.data['id'],
+          name: res.data['name'],
+          description: res.data['description'],
+          leader: res.data['leader_details']['user_details']['first_name'],
+          leaderImage: res1.data['route'],
+          image: kBaseUrl + res.data['img_details']['route']);
+      setState(() {
+        loading = false;
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }

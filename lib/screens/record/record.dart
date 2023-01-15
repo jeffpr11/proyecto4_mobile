@@ -64,7 +64,7 @@ class RecordState extends State<Record> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Container(
-                                    color: Colors.blueGrey.shade100,
+                                    color: kSecondaryColorGradient,
                                     child: const ListTile(
                                       leading: Icon(
                                         Icons.person_add_alt,

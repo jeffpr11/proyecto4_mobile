@@ -30,7 +30,7 @@ class LoginState extends State<Login> {
           ),
         ),
         automaticallyImplyLeading: false,
-        backgroundColor: kPrimaryColor,
+        backgroundColor: kSecondaryColor,
       ),
       body: SizedBox(
           width: double.infinity,

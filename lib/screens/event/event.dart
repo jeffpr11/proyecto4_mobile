@@ -1,8 +1,10 @@
 // import 'package:dio/dio.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto4_mobile/constants.dart';
 import 'package:proyecto4_mobile/size_data.dart';
 import 'package:proyecto4_mobile/defaults/default_loading.dart';
+import 'package:proyecto4_mobile/user_storage.dart';
 
 import 'event_card.dart';
 
@@ -14,13 +16,13 @@ class Event extends StatefulWidget {
 }
 
 class EventState extends State<Event> {
-  bool loading = false;
+  bool loading = true;
   List<Widget> contenido = [];
 
   @override
   void initState() {
     super.initState();
-    buildList();
+    buildListRes();
   }
 
   @override
@@ -62,7 +64,6 @@ class EventState extends State<Event> {
                           padding: const EdgeInsets.symmetric(horizontal: 8.5),
                           child: Column(
                             children: contenido,
-
                           ),
                         ),
                       ],
@@ -73,21 +74,28 @@ class EventState extends State<Event> {
             : const Cargando());
   }
 
-  void buildList() {
-    List<Widget> res = [];
-    setState(() {
-      contenido = [];
-    });
-    for (int i = 1; i <= 20; i++) {
-      res.add(EventCard(
-          id: i,
-          name: "name $i",
-          description:
-              "desc asdfghj asdfqwera adsd astry. Lorem Ipsum has been the industrys standard dummy. $i",
-          date: "m$i/d$i/yyy$i"));
+  Future<void> buildListRes() async {
+    List<Widget> resL = [];
+    var tkn = await UserSecureStorage.getToken();
+    try {
+      final Response res = await dioConst.get('$kUrl/events/event/',
+          options: Options(headers: {
+            "Authorization": "Bearer $tkn",
+          }));
+      for (var e in res.data['results']) {
+        resL.add(EventCard(
+            id: e['id'],
+            name: e['name'],
+            description: e['description'].substring(0, 95) + "...",
+            date: e['date_start'].substring(0, 10),
+            route: e['img_details']['route']));
+      }
+      contenido = resL;
+      setState(() {
+        loading = false;
+      });
+    } catch (e) {
+      debugPrint(e.toString());
     }
-    setState(() {
-      contenido = res;
-    });
   }
 }

@@ -5,6 +5,7 @@ class UserSecureStorage {
 
   static const _keyToken = 'token';
   static const _keyUserId = 'userId';
+  static const _keyGroupId = 'groupId';
 
   static Future setToken(String token) async =>
       await _usrStorage.write(key: _keyToken, value: token);
@@ -18,6 +19,14 @@ class UserSecureStorage {
 
   static Future<int?> getUserId() async {
     final id = await _usrStorage.read(key: _keyUserId);
+    return int.parse(id!);
+  }
+
+  static Future setGroupId(int id) async =>
+      await _usrStorage.write(key: _keyGroupId, value: id.toString());
+
+  static Future<int?> getGroupId() async {
+    final id = await _usrStorage.read(key: _keyGroupId);
     return int.parse(id!);
   }
 }
