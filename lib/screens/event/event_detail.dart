@@ -2,7 +2,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto4_mobile/constants.dart';
-import 'package:proyecto4_mobile/screens/group/group_model.dart';
 import 'package:proyecto4_mobile/size_data.dart';
 import 'package:proyecto4_mobile/defaults/default_loading.dart';
 import 'package:proyecto4_mobile/user_storage.dart';
@@ -191,7 +190,7 @@ class EventDetailState extends State<EventDetail> {
               ],
             )),
           )
-        : Cargando();
+        : const Cargando();
   }
 
   Future<void> buildDetail() async {

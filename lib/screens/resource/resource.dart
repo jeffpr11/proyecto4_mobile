@@ -4,6 +4,7 @@ import 'package:proyecto4_mobile/constants.dart';
 import 'package:proyecto4_mobile/size_data.dart';
 import 'package:proyecto4_mobile/user_storage.dart';
 import 'package:proyecto4_mobile/defaults/default_loading.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Resource extends StatefulWidget {
   const Resource({Key? key}) : super(key: key);
@@ -130,6 +131,13 @@ class ResourceState extends State<Resource> {
                                   fontWeight: FontWeight.bold, fontSize: 14),
                             ),
                             Text("Creador: ${r['user_creator']}"),
+                            ElevatedButton(
+                              child: const Text('Abrir'),
+                              onPressed: () {
+                                getUrl(Uri.parse(route));
+                                Navigator.of(context).pop();
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -163,6 +171,12 @@ class ResourceState extends State<Resource> {
       return icono[format]!;
     } else {
       return kdefaultIcons['default']!;
+    }
+  }
+
+  Future<void> getUrl(Uri url) async {
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
     }
   }
 }

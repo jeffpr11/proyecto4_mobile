@@ -136,7 +136,6 @@ class GroupState extends State<Group> {
   }
 
   Future<void> getGroupInfo() async {
-    var usrId = await UserSecureStorage.getUserId();
     var tkn = await UserSecureStorage.getToken();
     var tmp = await UserSecureStorage.getGroupId();
     try {
