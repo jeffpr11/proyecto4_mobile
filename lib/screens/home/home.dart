@@ -35,7 +35,7 @@ class HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "LOGOTIPO",
+          "Centro Cristiano de Guayaquil",
           textScaleFactor: 1.15,
           style: TextStyle(
             fontWeight: FontWeight.bold,

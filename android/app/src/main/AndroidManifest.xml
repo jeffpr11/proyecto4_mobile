@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.proyecto4.proyecto4_mobile">
    <application
-        android:label="proyecto4_mobile"
+        android:label="CCG"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
