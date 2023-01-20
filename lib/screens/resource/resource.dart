@@ -5,6 +5,7 @@ import 'package:proyecto4_mobile/size_data.dart';
 import 'package:proyecto4_mobile/user_storage.dart';
 import 'package:proyecto4_mobile/defaults/default_loading.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:io' show Platform;
 
 class Resource extends StatefulWidget {
   const Resource({Key? key}) : super(key: key);
@@ -177,8 +178,14 @@ class ResourceState extends State<Resource> {
   }
 
   Future<void> getUrl(Uri url) async {
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
+    if (Platform.isAndroid) {
+      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+        throw Exception('Could not launch $url');
+      }
+    } else if (Platform.isIOS) {
+      if (!await launchUrl(url)) {
+        throw Exception('Could not launch $url');
+      }
     }
   }
 }
