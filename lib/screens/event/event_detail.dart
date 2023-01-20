@@ -21,6 +21,10 @@ class EventDetailState extends State<EventDetail> {
   bool loading = true;
   EventM? eventInfo;
   List<Widget> registered = [];
+  bool hab = true;
+  DateTime actual = DateTime.now().toUtc();
+  DateTime startDate = DateTime.now().toUtc();
+  DateTime endDate = DateTime.now().toUtc();
 
   @override
   void initState() {
@@ -37,8 +41,10 @@ class EventDetailState extends State<EventDetail> {
               centerTitle: true,
               title: Text(
                 eventInfo != null ? eventInfo!.name! : 'Titulo',
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
               backgroundColor: kSecondaryColor,
             ),
@@ -54,19 +60,20 @@ class EventDetailState extends State<EventDetail> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              height: getProportionateScreenHeight(10),
-                            ),
-                            Container(
-                              height: getProportionateScreenHeight(150),
-                              width: getProportionateScreenWidth(375),
-                              child: Image(
-                                image: NetworkImage(
-                                  eventInfo!.route!,
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: SizedBox(
+                                height: getProportionateScreenHeight(175),
+                                width: getProportionateScreenWidth(375),
+                                child: Image(
+                                  image: NetworkImage(
+                                    eventInfo!.route!,
+                                  ),
+                                  fit: BoxFit.cover,
                                 ),
-                                fit: BoxFit.cover,
                               ),
                             ),
+
                             SizedBox(
                               height: getProportionateScreenHeight(10),
                             ),
@@ -87,9 +94,11 @@ class EventDetailState extends State<EventDetail> {
                                   style: TextButton.styleFrom(
                                     backgroundColor: Colors.grey.shade200,
                                   ),
-                                  onPressed: () {
-                                    registerInterest();
-                                  },
+                                  onPressed: hab
+                                      ? () {
+                                          registerInterest();
+                                        }
+                                      : null,
                                   child: const Text(
                                     'Registrar asistencia',
                                     textScaleFactor: 0.9,
@@ -100,8 +109,17 @@ class EventDetailState extends State<EventDetail> {
                             Card(
                               elevation: 0,
                               child: ListTile(
-                                contentPadding: const EdgeInsets.only(
-                                    left: 0.0, right: 0.0),
+                                contentPadding: const EdgeInsets.only(top: 5.0),
+                                subtitle: Text(
+                                  '* Inicio: ${startDate.toString().substring(0, 16)}\n* Fin: ${endDate.toString().substring(0, 16)}',
+                                  textAlign: TextAlign.justify,
+                                ),
+                              ),
+                            ),
+                            Card(
+                              elevation: 0,
+                              child: ListTile(
+                                contentPadding: const EdgeInsets.all(0.0),
                                 subtitle: Text(
                                   eventInfo!.description!,
                                   textAlign: TextAlign.justify,
@@ -200,6 +218,7 @@ class EventDetailState extends State<EventDetail> {
           options: Options(headers: {
             "Authorization": "Bearer $tkn",
           }));
+
       eventInfo = EventM(
         id: res.data['id'],
         name: res.data['name'],
@@ -207,10 +226,13 @@ class EventDetailState extends State<EventDetail> {
         type: res.data['type'],
         startDate: res.data['date_start'],
         endDate: res.data['date_end'],
-        route: res.data['img_details']['route'],
+        route: res.data['event_image'],
         totalRecords: res.data['total_records'],
       );
       setState(() {
+        startDate = DateTime.parse(eventInfo!.startDate!);
+        endDate = DateTime.parse(eventInfo!.endDate!);
+        hab = actual.compareTo(startDate) <= 0 ? true : false;
         loading = false;
       });
     } catch (e) {
@@ -233,6 +255,7 @@ class EventDetailState extends State<EventDetail> {
             'event': widget.id,
             'user': usrId,
           });
+      getRegisteredList();
       setState(() {
         loading = false;
       });

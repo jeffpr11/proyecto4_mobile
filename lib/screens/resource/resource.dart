@@ -127,8 +127,10 @@ class ResourceState extends State<Resource> {
                           children: <Widget>[
                             Text(
                               r['name'],
+                              textScaleFactor: 1.15,
                               style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 14),
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             Text("Creador: ${r['user_creator']}"),
                             ElevatedButton(

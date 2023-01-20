@@ -74,7 +74,7 @@ class GroupState extends State<Group> {
                                   image: NetworkImage(
                                     groupInfo!.image!,
                                   ),
-                                  fit: BoxFit.cover,
+                                  // fit: BoxFit.cover,
                                 ),
                               ),
                               SizedBox(
@@ -95,7 +95,7 @@ class GroupState extends State<Group> {
                                 height: getProportionateScreenHeight(10),
                               ),
                               const Text(
-                                'Encargado',
+                                'Líder',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -144,20 +144,14 @@ class GroupState extends State<Group> {
             "Authorization": "Bearer $tkn",
           }));
 
-      var tmp1 = res.data['leader_details']['img_file'];
-      final Response res1 =
-          await dioConst.get('$kUrl/organizations/image/$tmp1/',
-              options: Options(headers: {
-                "Authorization": "Bearer $tkn",
-              }));
-
+      var leader = res.data['leader_details'];
       groupInfo = GroupM(
           id: res.data['id'],
           name: res.data['name'],
           description: res.data['description'],
-          leader: res.data['leader_details']['user_details']['first_name'],
-          leaderImage: res1.data['route'],
-          image: kBaseUrl + res.data['img_details']['route']);
+          leader: leader['user_details']['first_name'],
+          leaderImage: "$kBaseUrl${leader['profile_image']}",
+          image: "$kBaseUrl${res.data['group_image']}");
       setState(() {
         loading = false;
       });

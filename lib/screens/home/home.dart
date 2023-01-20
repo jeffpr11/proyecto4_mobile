@@ -5,6 +5,7 @@ import 'package:proyecto4_mobile/screens/group/group.dart';
 import 'package:proyecto4_mobile/screens/record/record.dart';
 import 'package:proyecto4_mobile/screens/profile/profile.dart';
 import 'package:proyecto4_mobile/screens/resource/resource.dart';
+import 'package:proyecto4_mobile/size_data.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -32,13 +33,12 @@ class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text(
           "LOGOTIPO",
+          textScaleFactor: 1.15,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 18,
           ),
         ),
         automaticallyImplyLeading: false,
@@ -57,12 +57,12 @@ class HomeState extends State<Home> {
         showUnselectedLabels: true,
         currentIndex: current,
         onTap: _navigationHandler,
-        selectedFontSize: 14,
-        unselectedFontSize: 12,
+        selectedFontSize: getProportionateScreenHeight(12),
+        unselectedFontSize: getProportionateScreenHeight(11),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.groups_outlined), label: 'Grupo'),
+              icon: Icon(Icons.groups_outlined), label: groupPrincipal),
           BottomNavigationBarItem(
               icon: Icon(Icons.file_copy_outlined), label: 'Recursos'),
           BottomNavigationBarItem(

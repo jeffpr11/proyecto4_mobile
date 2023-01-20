@@ -28,8 +28,18 @@ class FormularioLogin extends StatefulWidget {
 
 class FormularioLoginState extends State<FormularioLogin> {
   bool recuerdame = false;
+  bool able = false;
   bool loading = false;
-  int userId = -9;
+  int userId = -1;
+  int groupId = -1;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.usuarioController.addListener(validAble);
+    widget.contrasenaController.addListener(validAble);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -75,18 +85,29 @@ class FormularioLoginState extends State<FormularioLogin> {
                   SizedBox(
                     height: getProportionateScreenHeight(60),
                     width: getProportionateScreenWidth(250),
-                    child: DefaultButton(
-                      func: () async => {
-                        await logIn(context),
-                        setState(() {
-                          loading = false;
-                        }),
-                        if (userId != -9)
-                          {AutoRouter.of(context).push(const HomeRoute())}
-                      },
-                      label: "Inicia Sesión",
-                      colorBg: loading ? kDisableColor : kPrimaryColor,
-                    ),
+                    child: able
+                        ? DefaultButton(
+                            func: () async => {
+                              {
+                                await logIn(context),
+                                setState(() {
+                                  loading = false;
+                                }),
+                                if ((userId != -1) && (groupId != -1))
+                                  {
+                                    AutoRouter.of(context)
+                                        .push(const HomeRoute())
+                                  }
+                              }
+                            },
+                            label: "Iniciar Sesión",
+                            colorBg: kPrimaryColor,
+                          )
+                        : DefaultButton(
+                            func: () => {},
+                            label: "Iniciar Sesión",
+                            colorBg: kDisableColor,
+                          ),
                   ),
                 SizedBox(
                   height: getProportionateScreenHeight(30),
@@ -99,6 +120,19 @@ class FormularioLoginState extends State<FormularioLogin> {
     );
   }
 
+  void validAble() {
+    if (widget.usuarioController.text != '' &&
+        widget.contrasenaController.text != '') {
+      setState(() {
+        able = true;
+      });
+    } else {
+      setState(() {
+        able = false;
+      });
+    }
+  }
+
   Future<void> logIn(BuildContext context) async {
     setState(() {
       loading = true;
@@ -109,28 +143,50 @@ class FormularioLoginState extends State<FormularioLogin> {
         'password': widget.contrasenaController.text
       });
       Map<String, dynamic> payload = Jwt.parseJwt(response.data['token']);
-      if (payload['profile_id'] == -1) {
+      setState(() {
+        userId = payload['profile_id'];
+      });
+      String tkn = response.data['token'] as String;
+      final Response res =
+          await dioConst.get('$kUrl/organizations/group/?members=$userId',
+              options: Options(headers: {
+                "Authorization": "Bearer $tkn",
+              }));
+      var results = res.data['results'];
+      if (results.length == 0) {
         setState(() {
-          userId = -9;
+          userId = -1;
+          groupId = -1;
         });
-        feedback(context, "No cuenta con perfil. Contacte Administrador.");
+        feedback(context, "No cuenta con grupo asignado.");
       } else {
         setState(() {
-          userId = payload['profile_id'];
+          groupId = results[0]['id'];
         });
-        String tkn = response.data['token'] as String;
-        final Response res =
-            await dioConst.get('$kUrl/organizations/group/?members=$userId',
-                options: Options(headers: {
-                  "Authorization": "Bearer $tkn",
-                }));
         UserSecureStorage.setToken(tkn);
         UserSecureStorage.setUserId(userId);
-        UserSecureStorage.setGroupId(res.data['results'][0]['id']);
+        UserSecureStorage.setGroupId(groupId);
       }
-    } catch (e) {
-      debugPrint(e.toString());
-      feedback(context, "Credenciales incorrectas.");
+    } on DioError catch (e) {
+      setState(() {
+        userId = -1;
+        groupId = -1;
+      });
+      if (e.toString().contains('refuse')) {
+        feedback(context, "Servidor sin conexión. Contacte administrador.");
+      } else {
+        var error = e.response!.toString();
+        if (error.contains('members')) {
+          if (!error.contains('-1')) {
+            feedback(context, "Perfil no cuenta con grupo asociado.");
+          }
+          feedback(context, "No cuenta con perfil. Contacte administrador.");
+        } else if (error.contains('credentials')) {
+          feedback(context, "Credenciales incorrectas/No cuenta con usuario.");
+        } else {
+          feedback(context, "Algo salió mal. Contacte administrador.");
+        }
+      }
     }
   }
 

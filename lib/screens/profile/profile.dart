@@ -37,7 +37,6 @@ class ProfileState extends State<Profile> {
                   SliverFillRemaining(
                     hasScrollBody: false,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         SizedBox(
                           height: getProportionateScreenHeight(20),
@@ -59,38 +58,105 @@ class ProfileState extends State<Profile> {
                                 textAlign: TextAlign.center),
                           ),
                         ),
-                        SizedBox(
-                          height: getProportionateScreenHeight(20),
-                        ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.5),
                           child: Column(
                             children: [
-                              readOnlyTextField(
-                                  "Nombres", userInfo!.firstName!),
-                              readOnlyTextField(
-                                  "Apellidos", userInfo!.lastName!),
-                              readOnlyTextField("Email", userInfo!.email!),
-                              readOnlyTextField("Cédula", userInfo!.cardId!),
-                              readOnlyTextField(
-                                  "Fecha de nacimiento", userInfo!.bornDate!),
-                              buildTextField(
-                                  "Teléfono",
-                                  phoneCtrl,
-                                  "Actualiza telefono",
-                                  _phoneVld ? null : "Teléfono inválido"),
-                              buildTextField(
-                                  "Dirección",
-                                  addressCtrl,
-                                  "Actualiza dirección",
-                                  _addressVld ? null : "Dirección muy corta"),
+                              CircleAvatar(
+                                backgroundColor: Colors.white70,
+                                minRadius: 60.0,
+                                child: CircleAvatar(
+                                  radius: 50.0,
+                                  backgroundImage: NetworkImage(
+                                    userInfo!.profileImage!,
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  buildReadOnlyText(
+                                      userInfo!.firstName!, 'Nombres'),
+                                  buildReadOnlyText(
+                                      userInfo!.lastName!, 'Apellidos'),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  buildReadOnlyText(
+                                      userInfo!.email!, 'Correo eléctronico'),
+                                  buildReadOnlyText(
+                                      userInfo!.cardId!, 'Cédula'),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  buildReadOnlyText(userInfo!.bornDate!,
+                                      'Fecha de nacimiento'),
+                                  buildReadOnlyText(userInfo!.work!, 'Trabajo'),
+                                ],
+                              ),
+                              SizedBox(
+                                width: getProportionateScreenWidth(350),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                          color: Colors.grey.shade300),
+                                    ),
+                                  ),
+                                  child: const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 8.5),
+                                    child: Text('Información de contacto',
+                                        textScaleFactor: 1.1,
+                                        style: TextStyle(
+                                          color: Color.fromARGB(100, 0, 0, 0),
+                                        ),
+                                        textAlign: TextAlign.center),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: getProportionateScreenHeight(15),
+                              ),
+                              Row(
+                                children: [
+                                  buildEditingText(
+                                      phoneCtrl,
+                                      "Actualiza telefono",
+                                      _phoneVld ? null : "Teléfono inválido",
+                                      'Celular'),
+                                  buildEditingText(
+                                      addressCtrl,
+                                      "Actualiza dirección",
+                                      _addressVld
+                                          ? null
+                                          : "Dirección muy corta",
+                                      'Dirección'),
+                                ],
+                              ),
+                              SizedBox(
+                                height: getProportionateScreenHeight(10),
+                                width: getProportionateScreenWidth(350),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                          color: Colors.grey.shade300),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
+                        ),
+                        SizedBox(
+                          height: getProportionateScreenHeight(15),
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                          children: <Widget>[
                             TextButton(
                               style: ButtonStyle(
                                 foregroundColor:
@@ -113,7 +179,7 @@ class ProfileState extends State<Profile> {
                                 update();
                               },
                               child: const Text('GUARDAR CAMBIOS'),
-                            )
+                            ),
                           ],
                         ),
                       ],
@@ -134,15 +200,18 @@ class ProfileState extends State<Profile> {
                 "Authorization": "Bearer $tkn",
               }));
       userInfo = User(
-          id: resUserData.data['id'],
-          firstName: resUserData.data['user_details']['first_name'],
-          lastName: resUserData.data['user_details']['last_name'],
-          email: resUserData.data['user_details']['email'],
-          cardId: resUserData.data['card_id'],
-          bornDate: resUserData.data['born_date'],
-          phone_1: resUserData.data['tel_1'],
-          address: resUserData.data['address'],
-          username: resUserData.data['user_details']['username']);
+        id: resUserData.data['id'],
+        firstName: resUserData.data['user_details']['first_name'],
+        lastName: resUserData.data['user_details']['last_name'],
+        email: resUserData.data['user_details']['email'],
+        cardId: resUserData.data['card_id'],
+        bornDate: resUserData.data['born_date'],
+        phone_1: resUserData.data['tel_1'],
+        address: resUserData.data['address'],
+        username: resUserData.data['user_details']['username'],
+        profileImage: resUserData.data['profile_image'],
+        work: resUserData.data['work'],
+      );
       phoneCtrl.text = userInfo!.phone_1!;
       addressCtrl.text = userInfo!.address!;
       setState(() {
@@ -166,7 +235,7 @@ class ProfileState extends State<Profile> {
     if (_phoneVld && _addressVld) {
       var tkn = await UserSecureStorage.getToken();
       try {
-        final Response response =
+        final Response res =
             await dioConst.put('$kUrl/user/profile/${userInfo!.id}/',
                 options: Options(headers: {
                   "Authorization": "Bearer $tkn",
@@ -175,61 +244,68 @@ class ProfileState extends State<Profile> {
               'tel_1': phoneCtrl.text,
               'address': addressCtrl.text,
             });
-        SnackBar snackbar =
-            const SnackBar(content: Text("Perfil actualizado"));
-        await getUsrInfo();
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(snackbar);
+        if (res.statusCode == 200) {
+          feedback(context, "Actualización exitosa.");
+        } else {
+          feedback(context, "Actualización fallida.");
+        }
       } catch (e) {
         debugPrint(e.toString());
+        feedback(context, "Actualización fallida.");
       }
     }
   }
 
-  readOnlyTextField(String text1, String? text2) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "$text1:",
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        SizedBox(
-          width: getProportionateScreenWidth(200),
-          child: TextField(
-            readOnly: true,
-            decoration: InputDecoration(
-              hintText: text2,
-            ),
+  Future<void> feedback(BuildContext context, String msg) async {
+    SnackBar snackbar = SnackBar(content: Text(msg));
+    await getUsrInfo();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  }
+
+  buildReadOnlyText(String? txt1, String label) {
+    return Expanded(
+      child: ListTile(
+        title: Text(
+          txt1!,
+          textScaleFactor: 0.9,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(
-          height: getProportionateScreenHeight(15),
+        subtitle: Text(
+          label,
+          textScaleFactor: 0.9,
         ),
-      ],
+      ),
     );
   }
 
-  buildTextField(
-      String label, TextEditingController txtCtrl, String hint, String? valid) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "$label:",
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        SizedBox(
+  buildEditingText(
+      TextEditingController ctrlr, String txt, String? valid, String label) {
+    return Expanded(
+      child: ListTile(
+        title: SizedBox(
           width: getProportionateScreenWidth(200),
           child: TextField(
-            controller: txtCtrl,
-            decoration: InputDecoration(hintText: hint, errorText: valid),
+            controller: ctrlr,
+            style: TextStyle(
+              fontSize: getProportionateScreenHeight(13),
+            ),
+            decoration: InputDecoration(
+              isDense: true,
+              contentPadding: const EdgeInsets.all(0),
+              border: InputBorder.none,
+              hintText: txt,
+              errorText: valid,
+            ),
           ),
         ),
-        SizedBox(
-          height: getProportionateScreenHeight(15),
+        subtitle: Text(
+          label,
+          textScaleFactor: 0.9,
         ),
-      ],
+      ),
     );
   }
 }

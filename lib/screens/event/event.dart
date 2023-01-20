@@ -5,7 +5,6 @@ import 'package:proyecto4_mobile/constants.dart';
 import 'package:proyecto4_mobile/size_data.dart';
 import 'package:proyecto4_mobile/defaults/default_loading.dart';
 import 'package:proyecto4_mobile/user_storage.dart';
-
 import 'event_card.dart';
 
 class Event extends StatefulWidget {
@@ -83,12 +82,14 @@ class EventState extends State<Event> {
             "Authorization": "Bearer $tkn",
           }));
       for (var e in res.data['results']) {
+        var desc = e['description'];
+        desc = desc.length > 95 ? "${desc.substring(0, 95)}..." : desc;
         resL.add(EventCard(
             id: e['id'],
             name: e['name'],
-            description: e['description'].substring(0, 95) + "...",
+            description: desc,
             date: e['date_start'].substring(0, 10),
-            route: e['img_details']['route']));
+            route: e['event_image']));
       }
       contenido = resL;
       setState(() {

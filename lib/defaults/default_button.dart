@@ -14,7 +14,7 @@ class DefaultButton extends StatelessWidget {
     required this.func,
     this.colorBg = kSecondaryColor,
     this.colorTxt = kPrimaryLightColor,
-    super.key
+    super.key,
   });
 
   @override
@@ -33,8 +33,10 @@ class DefaultButton extends StatelessWidget {
         onPressed: func as void Function(),
         child: Text(
           label,
+          textScaleFactor: 1.3,
           style: TextStyle(
-              color: colorTxt, fontSize: getProportionateScreenHeight(20)),
+            color: colorTxt,
+          ),
         ));
   }
 }

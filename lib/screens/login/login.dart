@@ -20,13 +20,12 @@ class LoginState extends State<Login> {
   Widget build(BuildContext context) {
     SizeData().init(context);
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text(
           "LOGOTIPO",
+          textScaleFactor: 1.15,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 18,
           ),
         ),
         automaticallyImplyLeading: false,

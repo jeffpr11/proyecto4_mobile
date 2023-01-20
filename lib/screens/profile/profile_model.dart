@@ -10,6 +10,8 @@ class User {
   String? lastName;
   String? email;
   String? username;
+  String? profileImage;
+  String? work;
 
   User({
     this.id,
@@ -23,5 +25,7 @@ class User {
     this.city,
     this.user,
     this.username,
+    this.profileImage,
+    this.work,
   });
 }
